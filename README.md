@@ -12,6 +12,9 @@ A aplicação se conecta a um **nó da rede Ethereum**, interage com os **contra
 
 Acesse a aplicação através dos links abaixo:
 
+> Os serviços online estão em plataformas gratuitas, portanto podem estar indisponíveis.
+
+
 - **API:** https://chainlink-api.onrender.com
 - **Web:** https://chainlink-golang-web.onrender.com
 
