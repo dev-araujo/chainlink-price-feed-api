@@ -11,15 +11,21 @@
 
 <br>
 
-<h1 >Chainlink Price Feed com GO</h1>
+<h1>Chainlink Price Feed com GO</h1>
 
-<p >
+> Se você se interessa pelo tema dá uma olhadinha nesse tutorial que escrevi:
+> [Consultando Preços de Criptomoedas com Chainlink e Golang](https://dev.to/dev-araujo/como-integrar-chainlink-data-feeds-em-go-para-multiplos-tokens-ekb)
+
+<br/>
+<p>
   Esta API, desenvolvida em <strong>Go</strong>, atua como uma ponte para os <strong><a href="https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1&testnetSearch=1">Chainlink Data Feeds</a></strong>, permitindo que aplicações acessem dados de preços da <strong>blockchain Ethereum</strong> de forma simples e eficiente.
 </p>
 
 <p >
   A aplicação se conecta a um <strong>nó da rede Ethereum</strong>, interage com os <strong>contratos inteligentes da Chainlink</strong> para buscar os preços de ativos e os expõe através de uma API RESTful. Além disso, a aplicação inclui uma <strong>interface web simples</strong> (feita com HTMX) para visualizar esses preços.
 </p>
+
+
 
 <div >
   <img src='./assets/gopher-link.png' width='300'>
