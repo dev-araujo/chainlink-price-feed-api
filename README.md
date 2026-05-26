@@ -1,4 +1,3 @@
-
 <div >
   <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=5965E0&labelColor=121214" alt="License">
   <br>
@@ -31,19 +30,17 @@ Acesse a aplicação rodando em produção:
 
 - **Web Interface:** [https://crypto.dev-araujo.com.br/](https://crypto.dev-araujo.com.br/)
 
-
 <img src="./assets/interface.png" alt="Interface web" width="100%" style="border-radius: 10px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"/>
-
 
 ---
 
 ## 🛠️ Stack
 
-* **[Go](https://golang.org/)**: Linguagem principal.
-* **[Gin](https://github.com/gin-gonic/gin)**: Framework web de alta performance.
-* **[Go-Ethereum](https://github.com/ethereum/go-ethereum)**: Cliente para interação com a blockchain.
-* **[Docker](https://www.docker.com/)**: Containerização da aplicação.
-* **[HTMX](https://htmx.org/)**: Interatividade no frontend sem complexidade de SPAs.
+- **[Go](https://golang.org/)**: Linguagem principal.
+- **[Gin](https://github.com/gin-gonic/gin)**: Framework web de alta performance.
+- **[Go-Ethereum](https://github.com/ethereum/go-ethereum)**: Cliente para interação com a blockchain.
+- **[Docker](https://www.docker.com/)**: Containerização da aplicação.
+- **[HTMX](https://htmx.org/)**: Interatividade no frontend sem complexidade de SPAs.
 
 ## 🚀 Executando a aplicação
 
@@ -51,12 +48,13 @@ Siga as instruções abaixo para ter uma cópia do projeto rodando em sua máqui
 
 ### Pré-requisitos
 
-* [Go](https://golang.org/doc/install) (1.24.4+)
-* [Docker](https://docs.docker.com/get-docker/) (Opcional, mas recomendado)
+- [Go](https://golang.org/doc/install) (1.24.4+)
+- [Docker](https://docs.docker.com/get-docker/) (Opcional, mas recomendado)
 
 ### Instalação
 
 1. Clone o repositório:
+
 ```sh
 git clone [https://github.com/dev-araujo/chainlink-price-feed.git](https://github.com/dev-araujo/chainlink-price-feed.git)
 cd chainlink-price-feed
@@ -64,13 +62,14 @@ cd chainlink-price-feed
 ```
 
 2. Configure as variáveis de ambiente:
+
 ```sh
 cp .env.example .env
 
 ```
 
-
 3. Edite o arquivo `.env` inserindo sua URL RPC (Infura/Alchemy):
+
 ```json
 RPC_URL="[https://mainnet.infura.io/v3/SEU_ID_DO_INFURA](https://mainnet.infura.io/v3/SEU_ID_DO_INFURA)"
 SERVER_PORT="8080"
@@ -80,10 +79,7 @@ API_URL="http://localhost:8080"
 
 ```
 
-
 > **💡 Dica:** Para testes, você pode obter um RPC gratuito em [Public Node](https://ethereum.publicnode.com/).
-
-
 
 ---
 
@@ -96,8 +92,8 @@ docker-compose up --build
 
 ```
 
-* A **API** estará disponível em `http://localhost:8080`
-* A **Aplicação Web** estará disponível em `http://localhost:8081`
+- A **API** estará disponível em `http://localhost:8080`
+- A **Aplicação Web** estará disponível em `http://localhost:8081`
 
 ---
 
@@ -112,7 +108,7 @@ go run ./cmd/api/main.go
 
 ```
 
-*A API iniciará na porta definida em `SERVER_PORT` (padrão: 8080).*
+_A API iniciará na porta definida em `SERVER_PORT` (padrão: 8080)._
 
 #### 2. Iniciando a Aplicação Web (Frontend)
 
@@ -123,7 +119,7 @@ go run ./cmd/web/main.go
 
 ```
 
-*O site iniciará na porta definida em `WEB_PORT` (padrão: 8081).*
+_O site iniciará na porta definida em `WEB_PORT` (padrão: 8081)._
 
 ---
 
@@ -131,13 +127,13 @@ go run ./cmd/web/main.go
 
 A API fornece os seguintes endpoints para consulta:
 
-| Método | Endpoint | Descrição |
-| --- | --- | --- |
-| `GET` | `/health` | Verifica o status da API. |
-| `GET` | `/api/price/:asset/usd` | Retorna o preço do ativo em USD. |
-| `GET` | `/api/price/:asset/brl` | Retorna o preço do ativo em BRL. |
-| `GET` | `/api/price/all/usd` | Retorna todos os ativos em USD. |
-| `GET` | `/api/price/all/brl` | Retorna todos os ativos em BRL. |
+| Método | Endpoint                | Descrição                        |
+| ------ | ----------------------- | -------------------------------- |
+| `GET`  | `/health`               | Verifica o status da API.        |
+| `GET`  | `/api/price/:asset/usd` | Retorna o preço do ativo em USD. |
+| `GET`  | `/api/price/:asset/brl` | Retorna o preço do ativo em BRL. |
+| `GET`  | `/api/price/all/usd`    | Retorna todos os ativos em USD.  |
+| `GET`  | `/api/price/all/brl`    | Retorna todos os ativos em BRL.  |
 
 **Ativos Suportados (`:asset`):**
 `btc`, `eth`, `link`, `uni`, `1inch`, `paxg`, `stx`
@@ -148,23 +144,18 @@ A API fornece os seguintes endpoints para consulta:
 
 ```json
 {
-    "pair": "ETH/USD",
-    "price": "3000.00",
-    "timestamp": 1678886400,
-    "imageUrl": "[https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040](https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040)"
+  "pair": "ETH/USD",
+  "price": "3000.00",
+  "timestamp": 1678886400,
+  "imageUrl": "[https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040](https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040)"
 }
-
 ```
 
 ---
-
-
 
 ## Author 👷
 
 <img src="https://user-images.githubusercontent.com/97068163/149033991-781bf8b6-4beb-445a-913c-f05a76a28bfc.png" width="10%" alt="caricatura do autor desse repositório"/>
 
 **Adriano P Araujo**  
-  [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white&style=for-the-badge)](https://www.linkedin.com/in/araujocode/) [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white&style=for-the-badge)](https://github.com/dev-araujo)
-
-
+ [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white&style=for-the-badge)](https://www.linkedin.com/in/araujocode/) [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white&style=for-the-badge)](https://github.com/dev-araujo)
