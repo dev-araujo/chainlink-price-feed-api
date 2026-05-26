@@ -10,6 +10,7 @@ import (
 type Config struct {
 	RpcURL     string
 	ServerPort string
+	WebPort    string
 }
 
 func Load() *Config {
@@ -21,5 +22,6 @@ func Load() *Config {
 	return &Config{
 		RpcURL:     os.Getenv("RPC_URL"),
 		ServerPort: os.Getenv("SERVER_PORT"),
+		WebPort:    os.Getenv("WEB_PORT"),
 	}
 }

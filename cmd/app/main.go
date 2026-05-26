@@ -37,8 +37,8 @@ func main() {
 	if cfg.RpcURL == "" {
 		log.Println("AVISO: RPC_URL não definida, usando padrão ou erro pode ocorrer.")
 	}
-	if cfg.ServerPort == "" {
-		cfg.ServerPort = "8080"
+	if cfg.WebPort == "" {
+		cfg.WebPort = "8081"
 	}
 
 	client, err := ethclient.Dial(cfg.RpcURL)
