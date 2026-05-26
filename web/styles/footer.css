@@ -1,0 +1,25 @@
+.page-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem 0 3rem;
+  border-top: 1px solid var(--border-card);
+}
+
+.page-footer p {
+  font-family: 'Space Mono', monospace;
+  font-size: .7rem;
+  color: var(--text-muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.page-footer a {
+  color: var(--cl-blue);
+  text-decoration: none;
+  transition: color var(--dur-fast);
+}
+
+.page-footer a:hover {
+  color: var(--go-cyan);
+}

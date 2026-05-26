@@ -1,0 +1,55 @@
+.container {
+  position: relative;
+  z-index: 1;
+  width: 92%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+#main {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 0 5rem;
+  height: 78dvh;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-label {
+  font-family: "Space Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-divider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-subtle), transparent);
+}
+
+.price-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  #main {
+    padding: 2rem 0 4rem;
+  }
+
+  .price-list {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    width: 95%;
+  }
+}

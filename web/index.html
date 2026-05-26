@@ -1,42 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../styles/styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
-    rel="stylesheet" />
-  <title>Chainlink Price Feed</title>
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
- 
+  <meta name="description"
+    content="Chainlink Price Feed — preços de criptoativos em tempo real via Chainlink oracles, construído com Go." />
+  <title>Chainlink Price Feed · Go</title>
+
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/animations.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/header.css" />
+  <link rel="stylesheet" href="styles/cards.css" />
+  <link rel="stylesheet" href="styles/skeleton.css" />
+  <link rel="stylesheet" href="styles/overlay.css" />
+  <link rel="stylesheet" href="styles/footer.css" />
+
+  <script src="https://unpkg.com/htmx.org@1.9.10" defer></script>
 </head>
 
 <body>
-  <div id="feedback-overlay" class="feedback-overlay">
+  <div id="feedback-overlay" class="feedback-overlay" role="dialog" aria-live="polite" aria-label="Carregando">
     <div class="feedback-content">
-      <div class="spinner"></div>
+      <div class="spinner" aria-hidden="true"></div>
       <h2>Iniciando serviços</h2>
-      <p>(Isso pode levar até 1 minuto no plano gratuito)</p>
+
     </div>
   </div>
 
   <header id="header">
     <section class="container header-content">
       <div class="header-content-title">
-        <img src="assets/gopher.svg" alt="A - Golang Gopher @clipartmax.com" />
-        <h1>Chainlink Price Feed com Go</h1>
+        <div class="header-logo-wrap">
+          <img src="../assets/gopher.svg" alt="Go Gopher logo" />
+        </div>
+        <div>
+          <h1>Chainlink Price Feed</h1>
+          <span class="header-badge">LIVE · Powered by Oracles</span>
+        </div>
       </div>
 
       <div class="controls">
-
-        <a title="Saiba mais aqui" href="https://github.com/dev-araujo/chainlink-price-feed" target="_blank">
-          <img src="assets/github-logo.svg" alt="github logo" />
+        <a id="github-link" title="Ver código no GitHub" href="https://github.com/dev-araujo/chainlink-price-feed"
+          target="_blank" rel="noopener noreferrer" aria-label="Ver repositório no GitHub">
+          <img src="../assets/github-logo.svg" alt="" aria-hidden="true" />
         </a>
-        <select id="currency-select" name="currency">
+
+        <label for="currency-select" class="sr-only">Selecionar moeda</label>
+        <select id="currency-select" name="currency" aria-label="Moeda de exibição" hx-get="/prices/all/brl"
+          hx-trigger="change" hx-target="#price-list-container" hx-swap="innerHTML" hx-indicator="#loading-indicator">
           <option value="brl">BRL</option>
           <option value="usd">USD</option>
         </select>
@@ -44,39 +59,58 @@
     </section>
   </header>
 
-  <div class="container" id="main">
-    <div id="price-list-container" class="price-list" hx-get="/ready" hx-trigger="load" hx-swap="outerHTML"
-      hx-indicator="#loading-indicator"></div>
+  <main id="main">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Preços de Ativos</span>
+        <div class="section-divider" aria-hidden="true"></div>
+      </div>
 
-    <div id="loading-indicator" class="skeleton-list htmx-indicator">
-      <div class="skeleton-card"></div>
-      <div class="skeleton-card"></div>
-      <div class="skeleton-card"></div>
-      <div class="skeleton-card"></div>
-      <div class="skeleton-card"></div>
-      <div class="skeleton-card"></div>
+      <div id="price-list-container" class="price-list" hx-get="/ready" hx-trigger="load" hx-swap="outerHTML"
+        hx-indicator="#loading-indicator" role="list" aria-label="Lista de preços"></div>
+
+      <div id="loading-indicator" class="skeleton-list htmx-indicator" aria-hidden="true">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
     </div>
-  </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="container">
+      <p>
+        Built with
+        <a href="https://golang.org" target="_blank" rel="noopener">Go</a>
+        ·
+        <a href="https://chain.link" target="_blank" rel="noopener">Chainlink</a>
+        ·
+        <a href="https://htmx.org" target="_blank" rel="noopener">HTMX</a>
+      </p>
+    </div>
+  </footer>
 
   <script>
     const feedbackOverlay = document.getElementById('feedback-overlay');
-    const priceListContainer = document.getElementById('price-list-container');
 
-    document.body.addEventListener('htmx:xhr:loadstart', function (evt) {
+    document.body.addEventListener('htmx:xhr:loadstart', () => {
       feedbackOverlay.classList.add('active');
     });
 
-    document.body.addEventListener('htmx:xhr:loadend', function (evt) {
+    document.body.addEventListener('htmx:xhr:loadend', () => {
+      feedbackOverlay.classList.remove('active');
+    });
+    document.body.addEventListener('htmx:responseError', () => {
       feedbackOverlay.classList.remove('active');
     });
 
-    document.body.addEventListener('htmx:responseError', function (evt) {
-      feedbackOverlay.classList.remove('active');
-    });
-
-    document.body.addEventListener('htmx:configRequest', function (evt) {
-      if (evt.detail.triggeringEvent && evt.detail.triggeringEvent.target.id === 'currency-select') {
-        const currency = evt.detail.triggeringEvent.target.value;
+    document.body.addEventListener('htmx:configRequest', (evt) => {
+      const trigger = evt.detail.triggeringEvent;
+      if (trigger && trigger.target.id === 'currency-select') {
+        const currency = trigger.target.value;
         evt.detail.path = `/prices/all/${currency}`;
       }
     });

@@ -1,0 +1,41 @@
+.skeleton-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.skeleton-card {
+  height: 96px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 0%,
+    var(--bg-raised) 40%,
+    var(--bg-surface) 80%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-sweep 1.8s ease-in-out infinite;
+}
+
+.skeleton-card:nth-child(even) {
+  animation-delay: .3s;
+}
+
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator {
+  display: grid;
+}
+
+.htmx-request .price-list {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .skeleton-list {
+    grid-template-columns: 1fr;
+  }
+}

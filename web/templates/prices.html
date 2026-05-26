@@ -1,10 +1,12 @@
 {{range .}}
-<div class="price-card">
-    <img src="{{.ImageURL}}" alt="{{.Pair}}">
-    <div>
+<div class="price-card" role="listitem">
+    <div class="token-icon-wrap">
+        <img src="{{.ImageURL}}" alt="{{.Pair}} token icon" loading="lazy" />
+    </div>
+    <div class="card-data">
         <strong>{{.Pair}}</strong>
         <p>{{.CurrencySymbol}}{{.Price}}</p>
-        <small>Atualizado: {{.LastUpdate}}</small>
+        <small>↻ {{.LastUpdate}}</small>
     </div>
 </div>
 {{end}}
