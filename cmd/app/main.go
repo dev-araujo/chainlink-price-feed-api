@@ -47,8 +47,13 @@ func main() {
 	}
 	log.Println("Conectado com sucesso à rede principal da Ethereum!")
 
+	catalog, err := service.NewFeedCatalog()
+	if err != nil {
+		log.Fatalf("Falha ao inicializar catálogo de feeds: %v", err)
+	}
+
 	exchangeService := service.NewExchangeService()
-	chainlinkService := service.NewChainlinkService(client, exchangeService)
+	chainlinkService := service.NewChainlinkService(client, catalog, exchangeService)
 	assetService := service.NewAssetService()
 
 	priceHandler := handler.NewPriceHandler(chainlinkService, assetService)
@@ -125,8 +130,8 @@ func main() {
 		c.JSON(200, gin.H{"status": "ATIVO"})
 	})
 
-	serverAddr := fmt.Sprintf(":%s", cfg.ServerPort)
-	log.Printf("Iniciando applicação unificada (Web + API) na porta %s", cfg.ServerPort)
+	serverAddr := fmt.Sprintf(":%s", cfg.WebPort)
+	log.Printf("Iniciando applicação unificada (Web + API) na porta %s", cfg.WebPort)
 
 	if err := router.Run(serverAddr); err != nil {
 		log.Fatalf("Falha ao iniciar o servidor: %v", err)

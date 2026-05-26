@@ -8,7 +8,6 @@ import (
 	"sync"
 
 	"github.com/dev-araujo/chainlink-price-feed/contracts"
-	"github.com/dev-araujo/chainlink-price-feed/internal/config"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -23,14 +22,14 @@ type PriceData struct {
 
 type ChainlinkService struct {
 	client          *ethclient.Client
-	contractAddrs   map[string]string
+	catalog         *FeedCatalog
 	exchangeService *ExchangeService
 }
 
-func NewChainlinkService(client *ethclient.Client, exchangeService *ExchangeService) *ChainlinkService {
+func NewChainlinkService(client *ethclient.Client, catalog *FeedCatalog, exchangeService *ExchangeService) *ChainlinkService {
 	return &ChainlinkService{
 		client:          client,
-		contractAddrs:   config.ContractAddresses,
+		catalog:         catalog,
 		exchangeService: exchangeService,
 	}
 }
@@ -60,12 +59,12 @@ func (s *ChainlinkService) GetPriceBRL(ctx context.Context, asset string) (*Pric
 }
 
 func (s *ChainlinkService) fetchPriceFromChainlink(ctx context.Context, asset string) (*PriceData, error) {
-	addressHex, ok := s.contractAddrs[asset]
+	entry, ok := s.catalog.Get(asset)
 	if !ok {
-		return nil, fmt.Errorf("ativo '%s' não suportado", asset)
+		return nil, fmt.Errorf("ativo '%s' não encontrado no catálogo de feeds", asset)
 	}
 
-	address := common.HexToAddress(addressHex)
+	address := common.HexToAddress(entry.ProxyAddress)
 	priceFeed, err := contracts.NewAggregatorV3Interface(address, s.client)
 	if err != nil {
 		return nil, fmt.Errorf("falha ao instanciar contrato para %s: %w", asset, err)
@@ -86,29 +85,25 @@ func (s *ChainlinkService) fetchPriceFromChainlink(ctx context.Context, asset st
 	price := new(big.Float).SetInt(latestRoundData.Answer)
 	price.Quo(price, new(big.Float).SetInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(decimals)), nil)))
 
-	pairName := fmt.Sprintf("%s/USD", strings.ToUpper(asset))
-	if asset == "brl" {
-		pairName = "BRL/USD"
-	}
-
 	return &PriceData{
-		Pair:      pairName,
+		Pair:      fmt.Sprintf("%s/USD", strings.ToUpper(asset)),
 		Price:     price,
 		Timestamp: latestRoundData.UpdatedAt.Int64(),
 	}, nil
 }
 
 func (s *ChainlinkService) fetchAllPrices(priceFetcher func(ctx context.Context, asset string) (*PriceData, error)) ([]*PriceData, error) {
-	prices := make([]*PriceData, 0, len(s.contractAddrs))
+	feeds := s.catalog.All()
+	prices := make([]*PriceData, 0, len(feeds))
 	var mu sync.Mutex
 	g, ctx := errgroup.WithContext(context.Background())
 
-	for asset := range s.contractAddrs {
-		asset := asset
+	for symbol := range feeds {
+		symbol := symbol
 		g.Go(func() error {
-			priceData, err := priceFetcher(ctx, asset)
+			priceData, err := priceFetcher(ctx, symbol)
 			if err != nil {
-				return fmt.Errorf("falha ao buscar preço para %s: %w", asset, err)
+				return fmt.Errorf("falha ao buscar preço para %s: %w", symbol, err)
 			}
 			mu.Lock()
 			prices = append(prices, priceData)

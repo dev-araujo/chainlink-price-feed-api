@@ -25,12 +25,17 @@ func main() {
 
 	client, err := ethclient.Dial(cfg.RpcURL)
 	if err != nil {
-		log.Fatalf("Falha ao conectar ao nó da rede principal da Ethereum: %v", err)
+		log.Fatalf("Falha ao conectar ao nó Ethereum: %v", err)
 	}
 	log.Println("Conectado com sucesso à rede principal da Ethereum!")
 
+	catalog, err := service.NewFeedCatalog()
+	if err != nil {
+		log.Fatalf("Falha ao inicializar catálogo de feeds: %v", err)
+	}
+
 	exchangeService := service.NewExchangeService()
-	chainlinkService := service.NewChainlinkService(client, exchangeService)
+	chainlinkService := service.NewChainlinkService(client, catalog, exchangeService)
 	assetService := service.NewAssetService()
 
 	priceHandler := handler.NewPriceHandler(chainlinkService, assetService)

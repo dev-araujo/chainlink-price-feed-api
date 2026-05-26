@@ -29,7 +29,12 @@ func main() {
 
 	exchangeService := service.NewExchangeService()
 
-	chainlinkService := service.NewChainlinkService(client, exchangeService)
+	catalog, err := service.NewFeedCatalog()
+	if err != nil {
+		log.Fatalf("Falha ao inicializar catálogo de feeds: %v", err)
+	}
+
+	chainlinkService := service.NewChainlinkService(client, catalog, exchangeService)
 
 	asset := "xau" // eth| link| btc | aud | eur | jpy | ftse| xau |
 
