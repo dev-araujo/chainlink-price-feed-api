@@ -1,5 +1,5 @@
 {{range .}}
-<div class="price-card" role="listitem">
+<div class="price-card" role="listitem" data-pair="{{.Pair}}" data-price="{{.Price}}">
     <div class="token-icon-wrap">
         <img src="{{.ImageURL}}" alt="{{.Pair}} token icon" loading="lazy" />
     </div>

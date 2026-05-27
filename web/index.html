@@ -66,6 +66,23 @@
         <div class="section-divider" aria-hidden="true"></div>
       </div>
 
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="search" id="search-input" placeholder="Buscar ativo…" autocomplete="off"
+            aria-label="Buscar ativo" />
+        </div>
+        <label for="sort-select" class="sr-only">Ordenar por preço</label>
+        <select id="sort-select" aria-label="Ordenar preços">
+          <option value="default">Ordenar</option>
+          <option value="asc">↑ Menor preço</option>
+          <option value="desc">↓ Maior preço</option>
+        </select>
+      </div>
+
       <div id="price-list-container" class="price-list" hx-get="/ready" hx-trigger="load" hx-swap="outerHTML"
         hx-indicator="#loading-indicator" role="list" aria-label="Lista de preços"></div>
 
@@ -99,7 +116,6 @@
     document.body.addEventListener('htmx:xhr:loadstart', () => {
       feedbackOverlay.classList.add('active');
     });
-
     document.body.addEventListener('htmx:xhr:loadend', () => {
       feedbackOverlay.classList.remove('active');
     });
@@ -114,6 +130,52 @@
         evt.detail.path = `/prices/all/${currency}`;
       }
     });
+
+    const searchInput = document.getElementById('search-input');
+    const sortSelect  = document.getElementById('sort-select');
+
+    function applyFiltersAndSort() {
+      const container = document.getElementById('price-list-container');
+      if (!container) return;
+
+      const query     = searchInput.value.toLowerCase().trim();
+      const sortValue = sortSelect.value;
+      const cards     = Array.from(container.querySelectorAll('.price-card'));
+
+      cards.forEach(card => {
+        const pair = (card.dataset.pair || '').toLowerCase();
+        card.hidden = query.length > 0 && !pair.includes(query);
+      });
+
+      if (sortValue !== 'default') {
+        const visible = cards.filter(c => !c.hidden);
+        const hidden  = cards.filter(c =>  c.hidden);
+        visible.sort((a, b) => {
+          const pa = parseFloat(a.dataset.price) || 0;
+          const pb = parseFloat(b.dataset.price) || 0;
+          return sortValue === 'asc' ? pa - pb : pb - pa;
+        });
+        [...visible, ...hidden].forEach(card => container.appendChild(card));
+      }
+
+      let empty = container.querySelector('.no-results');
+      const anyVisible = cards.some(c => !c.hidden);
+      if (!anyVisible && cards.length > 0) {
+        if (!empty) {
+          empty = document.createElement('p');
+          empty.className = 'no-results';
+          empty.textContent = 'Nenhum ativo encontrado.';
+          container.appendChild(empty);
+        }
+      } else {
+        empty?.remove();
+      }
+    }
+
+    searchInput.addEventListener('input', applyFiltersAndSort);
+    sortSelect.addEventListener('change', applyFiltersAndSort);
+
+    document.body.addEventListener('htmx:afterSettle', applyFiltersAndSort);
   </script>
 </body>
 

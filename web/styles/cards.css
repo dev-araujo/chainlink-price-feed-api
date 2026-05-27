@@ -110,7 +110,6 @@
 .price-card p {
   margin: 0;
   font-family: 'Space Mono', monospace;
-  font-size: 1.3rem;
   font-weight: 700;
   color: var(--go-cyan);
   letter-spacing: -.02em;
