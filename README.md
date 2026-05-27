@@ -18,7 +18,7 @@
 </p>
 
 <p >
-  A aplicação se conecta a um <strong>nó da rede Ethereum</strong>, interage com os <strong>contratos inteligentes da Chainlink</strong> para buscar os preços de ativos e os expõe através de uma API RESTful. Além disso, a aplicação inclui uma <strong>interface web simples</strong> (feita com HTMX) para visualizar esses preços.
+  A aplicação se conecta a um <strong>nó da rede Ethereum</strong> e busca dinamicamente o catálogo completo de feeds de preço da Chainlink, interagindo com os <strong>contratos inteligentes</strong> para expor os preços de todos os ativos Crypto/USD disponíveis. Os preços em BRL são obtidos via conversão de câmbio em tempo real. Além disso, a aplicação inclui uma <strong>interface web</strong> (feita com HTMX) com suporte a filtro e alternância de moeda (USD/BRL).
 </p>
 
 <div >
@@ -44,6 +44,15 @@ Acesse a aplicação rodando em produção:
 * **[Go-Ethereum](https://github.com/ethereum/go-ethereum)**: Cliente para interação com a blockchain.
 * **[Docker](https://www.docker.com/)**: Containerização da aplicação.
 * **[HTMX](https://htmx.org/)**: Interatividade no frontend sem complexidade de SPAs.
+* **[CoinGecko API](https://www.coingecko.com/en/api)**: Imagens dos ativos com cache e fallback automático.
+
+## ✨ Funcionalidades
+
+- **Catálogo dinâmico de ativos**: todos os feeds Crypto/USD disponíveis no Chainlink são carregados automaticamente na inicialização e atualizados a cada 6 horas — sem lista fixa de ativos.
+- **Preços em USD e BRL**: conversão para real via taxa de câmbio em tempo real.
+- **Imagens automáticas**: logos dos ativos buscados dinamicamente via CoinGecko com fallback visual.
+- **Filtro na interface**: pesquise por nome de ativo diretamente na interface web.
+- **Alternância de moeda**: troque entre BRL e USD na interface sem recarregar a página.
 
 ## 🚀 Executando a aplicação
 
@@ -58,7 +67,7 @@ Siga as instruções abaixo para ter uma cópia do projeto rodando em sua máqui
 
 1. Clone o repositório:
 ```sh
-git clone [https://github.com/dev-araujo/chainlink-price-feed.git](https://github.com/dev-araujo/chainlink-price-feed.git)
+git clone https://github.com/dev-araujo/chainlink-price-feed.git
 cd chainlink-price-feed
 
 
@@ -74,8 +83,8 @@ cp .env.example .env
 
 3. Edite o arquivo `.env` inserindo sua URL RPC (Infura/Alchemy):
 
-```json
-RPC_URL="[https://mainnet.infura.io/v3/SEU_ID_DO_INFURA](https://mainnet.infura.io/v3/SEU_ID_DO_INFURA)"
+```env
+RPC_URL="https://mainnet.infura.io/v3/SEU_ID_DO_INFURA"
 SERVER_PORT="8080"
 GIN_MODE="release"
 WEB_PORT="8081"
@@ -118,7 +127,7 @@ go run cmd/app/main.go
 
 ```
 
-*A aplicação completa estará disponível na porta definida em `SERVER_PORT` (padrão: 8080).*
+*A aplicação completa estará disponível na porta definida em `WEB_PORT` (padrão: 8081).*
 
 #### Forma B: Executando os serviços separadamente
 
@@ -154,11 +163,11 @@ A API fornece os seguintes endpoints para consulta:
 | `GET` | `/health` | Verifica o status da API. |
 | `GET` | `/api/price/:asset/usd` | Retorna o preço do ativo em USD. |
 | `GET` | `/api/price/:asset/brl` | Retorna o preço do ativo em BRL. |
-| `GET` | `/api/price/all/usd` | Retorna todos os ativos em USD. |
-| `GET` | `/api/price/all/brl` | Retorna todos os ativos em BRL. |
+| `GET` | `/api/price/all/usd` | Retorna todos os ativos disponíveis em USD. |
+| `GET` | `/api/price/all/brl` | Retorna todos os ativos disponíveis em BRL. |
 
 **Ativos Suportados (`:asset`):**
-`btc`, `eth`, `link`, `uni`, `1inch`, `paxg`, `stx`
+Qualquer símbolo presente no catálogo de feeds Crypto/USD da Chainlink (ex: `btc`, `eth`, `link`, `uni`, `1inch`, `paxg`, `stx`, entre muitos outros). O catálogo é carregado dinamicamente na inicialização.
 
 ### Exemplos de Resposta
 
@@ -169,7 +178,17 @@ A API fornece os seguintes endpoints para consulta:
     "pair": "ETH/USD",
     "price": "3000.00",
     "timestamp": 1678886400,
-    "imageUrl": "[https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040](https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040)"
+    "imageUrl": "https://assets.coingecko.com/coins/images/279/small/ethereum.png"
+}
+
+
+```
+
+**GET** `/health`
+
+```json
+{
+    "status": "ATIVO"
 }
 
 
@@ -186,4 +205,3 @@ A API fornece os seguintes endpoints para consulta:
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white&style=for-the-badge)](https://www.linkedin.com/in/araujocode/)
 <br>
 [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white&style=for-the-badge)](https://github.com/dev-araujo)
-
