@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/big"
 	"strings"
 	"sync"
@@ -103,7 +104,8 @@ func (s *ChainlinkService) fetchAllPrices(priceFetcher func(ctx context.Context,
 		g.Go(func() error {
 			priceData, err := priceFetcher(ctx, symbol)
 			if err != nil {
-				return fmt.Errorf("falha ao buscar preço para %s: %w", symbol, err)
+				log.Printf("falha ao buscar preço para %s: %v", symbol, err)
+				return nil
 			}
 			mu.Lock()
 			prices = append(prices, priceData)
